@@ -2188,6 +2188,10 @@ func (process *TeleportProcess) initProxyEndpoint(conn *Connector) error {
 	if err != nil {
 		return trace.Wrap(err)
 	}
+	kubeClusterNames, err := cfg.Proxy.Kube.ClusterNames(conn.ServerIdentity.Cert.Extensions[utils.CertExtensionAuthority])
+	if err != nil {
+		return trace.Wrap(err)
+	}
 	sshProxy, err := regular.New(cfg.Proxy.SSHAddr,
 		cfg.Hostname,
 		[]ssh.Signer{conn.ServerIdentity.KeySigner},
@@ -2212,6 +2216,7 @@ func (process *TeleportProcess) initProxyEndpoint(conn *Connector) error {
 				process.BroadcastEvent(Event{Name: TeleportOKEvent, Payload: teleport.ComponentProxy})
 			}
 		}),
+		regular.SetKubernetesClusters(kubeClusterNames),
 	)
 	if err != nil {
 		return trace.Wrap(err)
