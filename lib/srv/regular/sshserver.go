@@ -88,7 +88,7 @@ type Server struct {
 
 	advertiseAddr           *utils.NetAddr
 	proxyPublicAddr         utils.NetAddr
-	proxyKubenretesClusters []string
+	proxyKubernetesClusters []string
 
 	// server UUID gets generated once on the first start and never changes
 	// usually stored in a file inside the data dir
@@ -468,7 +468,7 @@ func SetOnHeartbeat(fn func(error)) ServerOption {
 
 func SetKubernetesClusters(clusters []string) ServerOption {
 	return func(s *Server) error {
-		s.proxyKubenretesClusters = clusters
+		s.proxyKubernetesClusters = clusters
 		return nil
 	}
 }
@@ -720,7 +720,7 @@ func (s *Server) getServerInfo() (services.Server, error) {
 	}
 	server.SetTTL(s.clock, defaults.ServerAnnounceTTL)
 	server.SetPublicAddr(s.proxyPublicAddr.String())
-	server.SetKubernetesClusters(s.proxyKubenretesClusters)
+	server.SetKubernetesClusters(s.proxyKubernetesClusters)
 	return server, nil
 }
 
